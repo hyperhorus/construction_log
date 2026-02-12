@@ -57,7 +57,7 @@ class Photos {
     try {
       const { log_id, file_path, description, timestamp } = photoData;
       const [result] = await db.query(
-        'INSERT INTO Photos (log_id, file_path, description, time_captured) VALUES (?, ?, ?, ?)',
+        'INSERT INTO Photos (log_id, file_path, description, timestamp) VALUES (?, ?, ?, ?)',
         [log_id, file_path, description || null, timestamp || new Date()]
       );
       return this.findById(result.insertId);

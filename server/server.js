@@ -13,6 +13,7 @@ const inspectionsRoutes = require('./routes/inspections.routes');
 const subcontractorsRoutes = require('./routes/subcontractors.routes');
 const photosRoutes = require('./routes/photos.routes');
 const timeTrackingRoutes = require('./routes/timeTracking.routes');
+const dailyLogsRoutes = require('./routes/dailyLogs.routes'); // ADD THIS
 
 // Middleware
 app.use(cors());
@@ -62,6 +63,7 @@ app.use('/api/inspections', inspectionsRoutes);
 app.use('/api/subcontractors', subcontractorsRoutes);
 app.use('/api/photos', photosRoutes);
 app.use('/api/time-tracking', timeTrackingRoutes);
+app.use('/api/daily-logs', dailyLogsRoutes); // ADD THIS
 
 // 404 handler
 app.use((req, res) => {
@@ -87,6 +89,7 @@ app.listen(PORT, () => {
   console.log(`📍 http://localhost:${PORT}`);
   console.log(`📚 API Documentation: http://localhost:${PORT}/`);
   console.log('\n📋 Available Endpoints:');
+  console.log('   - Daily Logs:     /api/daily-logs');
   console.log('   - Equipment:      /api/equipment');
   console.log('   - Materials:      /api/materials');
   console.log('   - Inspections:    /api/inspections');
