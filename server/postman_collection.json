@@ -1,0 +1,738 @@
+{
+  "info": {
+    "name": "Construction Log API",
+    "description": "Complete API collection for Construction Log System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Root",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Equipment",
+      "item": [
+        {
+          "name": "Get All Equipment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipment",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "equipment"]
+            }
+          }
+        },
+        {
+          "name": "Get Equipment by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipment/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "equipment", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Equipment by Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipment?status=Available",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "equipment"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "Available"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Equipment Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipment/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "equipment", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Create Equipment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Excavator CAT 320\",\n  \"type\": \"Heavy Machinery\",\n  \"status\": \"Available\",\n  \"last_maintenance\": \"2024-01-15\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipment",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "equipment"]
+            }
+          }
+        },
+        {
+          "name": "Update Equipment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Excavator CAT 320\",\n  \"type\": \"Heavy Machinery\",\n  \"status\": \"In Use\",\n  \"last_maintenance\": \"2024-01-15\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/equipment/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "equipment", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Equipment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/equipment/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "equipment", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Materials",
+      "item": [
+        {
+          "name": "Get All Materials",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/materials",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "materials"]
+            }
+          }
+        },
+        {
+          "name": "Search Materials",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/materials?name=cement",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "materials"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "cement"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Low Stock Materials",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/materials?lowStock=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "materials"],
+              "query": [
+                {
+                  "key": "lowStock",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Materials Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/materials/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "materials", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Create Material",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ladrillos Rojos\",\n  \"quantity\": 2000,\n  \"unit\": \"bags\",\n  \"unit_cost\": 3.50,\n  \"supplier\": \"Ladrillos el carnal\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/materials",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "materials"]
+            }
+          }
+        },
+        {
+          "name": "Update Material",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ladrillos Rojos\",\n  \"quantity\": 160,\n  \"unit\": \"bags\",\n  \"unit_cost\": 16.50,\n  \"supplier\": \"ABC Building Supplies\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/materials/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "materials", "4"]
+            }
+          }
+        },
+        {
+          "name": "Update Quantity (Add)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 50,\n  \"operation\": \"add\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/materials/1/quantity",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "materials", "1", "quantity"]
+            }
+          }
+        },
+        {
+          "name": "Delete Material",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/materials/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "materials", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inspections",
+      "item": [
+        {
+          "name": "Get All Inspections",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inspections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inspections"]
+            }
+          }
+        },
+        {
+          "name": "Get Inspections by Project",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inspections?project_id=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inspections"],
+              "query": [
+                {
+                  "key": "project_id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Inspections Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inspections/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inspections", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Create Inspection",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"project_id\": 1,\n  \"date\": \"2024-02-08\",\n  \"type\": \"Safety Inspection\",\n  \"inspector\": \"John Smith\",\n  \"result\": \"Passed\",\n  \"notes\": \"All safety protocols followed\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/inspections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inspections"]
+            }
+          }
+        },
+        {
+          "name": "Update Inspection",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"project_id\": 1,\n  \"date\": \"2024-02-08\",\n  \"type\": \"Safety Inspection\",\n  \"inspector\": \"John Smith\",\n  \"result\": \"Conditional\",\n  \"notes\": \"Minor issues found, needs follow-up\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/inspections/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inspections", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Inspection",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inspections/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inspections", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Subcontractors",
+      "item": [
+        {
+          "name": "Get All Subcontractors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/subcontractors",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subcontractors"]
+            }
+          }
+        },
+        {
+          "name": "Get Subcontractors by Specialty",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/subcontractors?specialty=electrical",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subcontractors"],
+              "query": [
+                {
+                  "key": "specialty",
+                  "value": "electrical"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Expired Insurance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/subcontractors?insurance_status=expired",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subcontractors"],
+              "query": [
+                {
+                  "key": "insurance_status",
+                  "value": "expired"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Subcontractors Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/subcontractors/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subcontractors", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Create Subcontractor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company_name\": \"Smith Electrical Services\",\n  \"specialty\": \"Electrical\",\n  \"contact_info\": {\n    \"phone\": \"555-1234\",\n    \"email\": \"info@smithelectrical.com\",\n    \"address\": \"123 Main St\"\n  },\n  \"insurance_exp\": \"2024-12-31\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/subcontractors",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subcontractors"]
+            }
+          }
+        },
+        {
+          "name": "Update Subcontractor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company_name\": \"Smith Electrical Services\",\n  \"specialty\": \"Electrical & HVAC\",\n  \"contact_info\": {\n    \"phone\": \"555-1234\",\n    \"email\": \"info@smithelectrical.com\",\n    \"address\": \"123 Main St\"\n  },\n  \"insurance_exp\": \"2025-12-31\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/subcontractors/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subcontractors", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Subcontractor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/subcontractors/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subcontractors", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Photos",
+      "item": [
+        {
+          "name": "Get All Photos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/photos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "photos"]
+            }
+          }
+        },
+        {
+          "name": "Get Photos by Log",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/photos?log_id=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "photos"],
+              "query": [
+                {
+                  "key": "log_id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Photos Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/photos/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "photos", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Create Photo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"log_id\": 1,\n  \"file_path\": \"/uploads/photos/project1_001.jpg\",\n  \"description\": \"Foundation work completed\",\n  \"timestamp\": \"2024-02-08T10:30:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/photos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "photos"]
+            }
+          }
+        },
+        {
+          "name": "Update Photo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"log_id\": 1,\n  \"file_path\": \"/uploads/photos/project1_001.jpg\",\n  \"description\": \"Foundation work completed - North side\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/photos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "photos", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Photo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/photos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "photos", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Time Tracking",
+      "item": [
+        {
+          "name": "Get All Time Entries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/time-tracking",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "time-tracking"]
+            }
+          }
+        },
+        {
+          "name": "Get Time by Worker",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/time-tracking?worker_id=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "time-tracking"],
+              "query": [
+                {
+                  "key": "worker_id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Time Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/time-tracking/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "time-tracking", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Get Worker Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/time-tracking/stats?worker_id=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "time-tracking", "stats"],
+              "query": [
+                {
+                  "key": "worker_id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Time Entry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"worker_id\": 1,\n  \"project_id\": 1,\n  \"date\": \"2024-02-08\",\n  \"hours_worked\": 8,\n  \"overtime_hours\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/time-tracking",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "time-tracking"]
+            }
+          }
+        },
+        {
+          "name": "Update Time Entry",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"worker_id\": 1,\n  \"project_id\": 1,\n  \"date\": \"2024-02-08\",\n  \"hours_worked\": 8,\n  \"overtime_hours\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/time-tracking/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "time-tracking", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Time Entry",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/time-tracking/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "time-tracking", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
