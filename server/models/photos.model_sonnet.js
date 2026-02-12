@@ -122,35 +122,6 @@ class Photos {
       throw error;
     }
   }
-
-static async createWithUpload(photoData) {
-  try {
-    const { 
-      log_id, 
-      file_path, 
-      original_filename, 
-      file_size, 
-      mime_type, 
-      thumbnail_path,
-      description, 
-      timestamp 
-    } = photoData;
-    
-    // Store additional metadata in description or create new columns
-    const enrichedDescription = description || original_filename;
-    
-    const [result] = await db.query(
-      'INSERT INTO Photos (log_id, file_path, description, timestamp) VALUES (?, ?, ?, ?)',
-      [log_id, file_path, enrichedDescription, timestamp || new Date()]
-    );
-    
-    // You might want to add columns for thumbnail_path, file_size, etc. to your database
-    return this.findById(result.insertId);
-  } catch (error) {
-    throw error;
-  }
-}
-
 }
 
 module.exports = Photos;
