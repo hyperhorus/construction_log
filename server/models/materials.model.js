@@ -117,8 +117,24 @@ static async updateQuantity(id, quantity, operation = 'set') {
     throw error;
   }
 }
+
+ // Get materials statistics
+  static async getStats() {
+    try {
+      const [stats] = await db.query(`
+        SELECT 
+          COUNT(*) as total_items,
+          SUM(quantity * unit_cost) as total_value,
+          COUNT(DISTINCT supplier) as total_suppliers,
+          AVG(unit_cost) as avg_unit_cost
+        FROM Materials
+      `);
+      return stats[0];
+    } catch (error) {
+      throw error;
+    }
+  }
   
 }
-
 
 module.exports = Material;

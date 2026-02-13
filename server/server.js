@@ -1,24 +1,28 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Import routes
+const authRoutes = require('./routes/auth.routes'); // ADD THIS
+const dailyLogsRoutes = require('./routes/dailyLogs.routes');
 const equipmentRoutes = require('./routes/equipment.routes');
 const materialsRoutes = require('./routes/materials.routes');
 const inspectionsRoutes = require('./routes/inspections.routes');
 const subcontractorsRoutes = require('./routes/subcontractors.routes');
 const photosRoutes = require('./routes/photos.routes');
 const timeTrackingRoutes = require('./routes/timeTracking.routes');
-const dailyLogsRoutes = require('./routes/dailyLogs.routes'); // ADD THIS
+const reportsRoutes = require('./routes/reports.routes');
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser()); // ADD THIS
 
 // Serve static files (uploaded images)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -37,6 +41,8 @@ app.get('/', (req, res) => {
     status: 'running',
     endpoints: {
       health: '/api/health',
+      auth: '/api/auth',
+      dailyLogs: '/api/daily-logs',
       equipment: '/api/equipment',
       materials: '/api/materials',
       inspections: '/api/inspections',
@@ -57,13 +63,15 @@ app.get('/api/health', (req, res) => {
 });
 
 // API Routes
+app.use('/api/auth', authRoutes); // ADD THIS
+app.use('/api/daily-logs', dailyLogsRoutes);
 app.use('/api/equipment', equipmentRoutes);
 app.use('/api/materials', materialsRoutes);
 app.use('/api/inspections', inspectionsRoutes);
 app.use('/api/subcontractors', subcontractorsRoutes);
 app.use('/api/photos', photosRoutes);
 app.use('/api/time-tracking', timeTrackingRoutes);
-app.use('/api/daily-logs', dailyLogsRoutes); // ADD THIS
+app.use('/api/reports', reportsRoutes); // ADD THIS
 
 // 404 handler
 app.use((req, res) => {
@@ -89,6 +97,7 @@ app.listen(PORT, () => {
   console.log(`📍 http://localhost:${PORT}`);
   console.log(`📚 API Documentation: http://localhost:${PORT}/`);
   console.log('\n📋 Available Endpoints:');
+  console.log('   - Authentication: /api/auth');
   console.log('   - Daily Logs:     /api/daily-logs');
   console.log('   - Equipment:      /api/equipment');
   console.log('   - Materials:      /api/materials');
