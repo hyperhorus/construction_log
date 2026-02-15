@@ -30,4 +30,13 @@ export const reportsAPI = {
       '_blank'
     );
   },
+
+  downloadInspections: () => {
+    const token = localStorage.getItem('token');
+    window.open(
+      `${API_BASE_URL}/reports/inspections?token=${token}`,
+      '_blank'
+    );
+  },
+
 };

@@ -18,4 +18,7 @@ router.get('/equipment', reportsController.generateEquipmentReport);
 // GET /api/reports/materials - Generate materials PDF
 router.get('/materials', reportsController.generateMaterialsReport);
 
+// GET /api/reports/inspections - Generate inspections PDF
+router.get('/inspections', reportsController.generateInspectionsReport);
+
 module.exports = router;

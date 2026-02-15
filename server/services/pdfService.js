@@ -423,6 +423,385 @@ $$
       }
     });
   }
+
+
+// Generate Multiple Inspections Report
+static async generateInspectionsReport(inspections, outputPath, options = {}) {
+  return new Promise((resolve, reject) => {
+    try {
+      // ── Input Validation ──────────────────────────────
+      if (!Array.isArray(inspections)) {
+        throw new Error('Inspections parameter must be an array');
+      }
+
+      const doc = new PDFDocument({
+        margin: 50,
+        size: 'LETTER',
+        bufferPages: true,
+        info: {
+          Title: 'Inspections Report',
+          Author: 'Construction Log System',
+          Subject: 'Inspection Records',
+          CreationDate: new Date()
+        }
+      });
+
+      const stream = fs.createWriteStream(outputPath);
+      doc.pipe(stream);
+
+      const pageWidth = doc.page.width;
+      const marginLeft = 50;
+      const marginRight = 50;
+      const contentWidth = pageWidth - marginLeft - marginRight;
+
+      // ── Color Palette ─────────────────────────────────
+      const colors = {
+        primary: '#1a237e',
+        secondary: '#424242',
+        accent: '#0d47a1',
+        success: '#2e7d32',
+        warning: '#f57f17',
+        danger: '#c62828',
+        lightGray: '#f5f5f5',
+        mediumGray: '#e0e0e0',
+        darkGray: '#616161',
+        white: '#ffffff'
+      };
+
+      // ── Helper: Result Badge Color ────────────────────
+      const getResultColor = (result) => {
+        if (!result) return colors.darkGray;
+        const r = result.toLowerCase().trim();
+        if (['pass', 'passed', 'approved', 'compliant'].includes(r)) return colors.success;
+        if (['fail', 'failed', 'rejected', 'non-compliant'].includes(r)) return colors.danger;
+        if (['pending', 'in progress', 'conditional'].includes(r)) return colors.warning;
+        return colors.darkGray;
+      };
+
+      // ── Helper: Format Date Consistently ──────────────
+      const formatDate = (dateValue) => {
+        try {
+          const date = new Date(dateValue);
+          return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+        } catch {
+          return 'N/A';
+        }
+      };
+
+      // ── Helper: Check if we need a new page ───────────
+      const ensureSpace = (requiredSpace = 150) => {
+        if (doc.y + requiredSpace > doc.page.height - 80) {
+          doc.addPage();
+        }
+      };
+
+      // ── Helper: Draw horizontal line ──────────────────
+      const drawLine = (y = null, color = colors.mediumGray) => {
+        const lineY = y || doc.y;
+        doc
+          .strokeColor(color)
+          .lineWidth(1)
+          .moveTo(marginLeft, lineY)
+          .lineTo(pageWidth - marginRight, lineY)
+          .stroke();
+      };
+
+      // ══════════════════════════════════════════════════
+      // HEADER SECTION
+      // ══════════════════════════════════════════════════
+      doc
+        .rect(0, 0, pageWidth, 120)
+        .fill(colors.primary);
+
+      doc
+        .fillColor(colors.white)
+        .fontSize(26)
+        .font('Helvetica-Bold')
+        .text('Inspections', marginLeft, 30, {
+          align: 'center',
+          width: contentWidth
+        });
+
+      doc
+        .fontSize(12)
+        .font('Helvetica')
+        .fillColor('#bbdefb')
+        .text('Construction Log System', marginLeft, 65, {
+          align: 'center',
+          width: contentWidth
+        });
+
+      doc
+        .fontSize(10)
+        .text(`Generated: ${new Date().toLocaleString('en-US')}`, marginLeft, 85, {
+          align: 'center',
+          width: contentWidth
+        });
+
+      doc.y = 140;
+      doc.fillColor(colors.secondary);
+
+      // ══════════════════════════════════════════════════
+      // FILTER INFO
+      // ══════════════════════════════════════════════════
+      if (options.startDate && options.endDate) {
+        doc
+          .fontSize(11)
+          .font('Helvetica-Oblique')
+          .fillColor(colors.accent)
+          .text(
+            `Period: ${formatDate(options.startDate)} to ${formatDate(options.endDate)}`,
+            { align: 'center' }
+          )
+          .moveDown(1.5);
+      }
+
+      // ══════════════════════════════════════════════════
+      // SUMMARY STATISTICS
+      // ══════════════════════════════════════════════════
+      const totalInspections = inspections.length;
+      const passCount = inspections.filter(i =>
+        ['pass', 'passed', 'approved', 'compliant']
+          .includes((i.result || '').toLowerCase().trim())
+      ).length;
+      const failCount = inspections.filter(i =>
+        ['fail', 'failed', 'rejected', 'non-compliant']
+          .includes((i.result || '').toLowerCase().trim())
+      ).length;
+      const pendingCount = totalInspections - passCount - failCount;
+
+      const uniqueProjects = [...new Set(inspections.map(i => i.project_id).filter(Boolean))].length;
+      const uniqueInspectors = [...new Set(inspections.map(i => i.inspector).filter(Boolean))].length;
+      const uniqueTypes = [...new Set(inspections.map(i => i.type).filter(Boolean))].length;
+      const passRate = totalInspections > 0
+        ? ((passCount / totalInspections) * 100).toFixed(1)
+        : 0;
+
+      // Summary Box
+      const summaryBoxY = doc.y;
+      doc
+        .rect(marginLeft, summaryBoxY, contentWidth, 130)
+        .fillAndStroke(colors.lightGray, colors.mediumGray);
+
+      doc
+        .fillColor(colors.primary)
+        .fontSize(14)
+        .font('Helvetica-Bold')
+        .text('Summary Statistics', marginLeft + 15, summaryBoxY + 12);
+
+      drawLine(summaryBoxY + 32, colors.mediumGray);
+
+      const col1X = marginLeft + 15;
+      const col2X = marginLeft + (contentWidth / 2) + 15;
+      let statY = summaryBoxY + 42;
+
+      doc.fontSize(11).font('Helvetica').fillColor(colors.secondary);
+
+      // Column 1
+      doc
+        .font('Helvetica-Bold').text('Total Inspections: ', col1X, statY, { continued: true })
+        .font('Helvetica').text(`${totalInspections}`);
+      statY += 18;
+      doc
+        .font('Helvetica-Bold').text('Passed: ', col1X, statY, { continued: true })
+        .fillColor(colors.success).font('Helvetica').text(`${passCount}`)
+        .fillColor(colors.secondary);
+      statY += 18;
+      doc
+        .font('Helvetica-Bold').text('Failed: ', col1X, statY, { continued: true })
+        .fillColor(colors.danger).font('Helvetica').text(`${failCount}`)
+        .fillColor(colors.secondary);
+      statY += 18;
+      doc
+        .font('Helvetica-Bold').text('Pending/Other: ', col1X, statY, { continued: true })
+        .fillColor(colors.warning).font('Helvetica').text(`${pendingCount}`)
+        .fillColor(colors.secondary);
+
+      // Column 2
+      statY = summaryBoxY + 42;
+      doc
+        .font('Helvetica-Bold').text('Pass Rate: ', col2X, statY, { continued: true })
+        .font('Helvetica').text(`${passRate}%`);
+      statY += 18;
+      doc
+        .font('Helvetica-Bold').text('Projects Covered: ', col2X, statY, { continued: true })
+        .font('Helvetica').text(`${uniqueProjects}`);
+      statY += 18;
+      doc
+        .font('Helvetica-Bold').text('Inspectors: ', col2X, statY, { continued: true })
+        .font('Helvetica').text(`${uniqueInspectors}`);
+      statY += 18;
+      doc
+        .font('Helvetica-Bold').text('Inspection Types: ', col2X, statY, { continued: true })
+        .font('Helvetica').text(`${uniqueTypes}`);
+
+      doc.y = summaryBoxY + 145;
+      doc.moveDown(1);
+
+      // ══════════════════════════════════════════════════
+      // INDIVIDUAL INSPECTION RECORDS
+      // ══════════════════════════════════════════════════
+      doc
+        .fontSize(14)
+        .font('Helvetica-Bold')
+        .fillColor(colors.primary)
+        .text('Inspection Records', { underline: true })
+        .moveDown(1);
+
+      inspections.forEach((inspection, index) => {
+        // Smart page break — check if enough space exists
+        ensureSpace(200);
+
+        // ── Card Header ───────────────────────────────
+        const cardY = doc.y;
+        const resultColor = getResultColor(inspection.result);
+
+        // Left color accent bar
+        doc
+          .rect(marginLeft, cardY, 4, 20)
+          .fill(resultColor);
+
+        // Inspection title
+        doc
+          .fillColor(colors.primary)
+          .fontSize(12)
+          .font('Helvetica-Bold')
+          .text(
+            `Inspection #${index + 1}`,
+            marginLeft + 12,
+            cardY + 3
+          );
+
+        // Result badge (right-aligned)
+        if (inspection.result) {
+          const badgeText = inspection.result.toUpperCase();
+          const badgeWidth = doc.widthOfString(badgeText) + 16;
+          const badgeX = pageWidth - marginRight - badgeWidth;
+
+          doc
+            .roundedRect(badgeX, cardY, badgeWidth, 20, 3)
+            .fill(resultColor);
+          doc
+            .fillColor(colors.white)
+            .fontSize(9)
+            .font('Helvetica-Bold')
+            .text(badgeText, badgeX + 8, cardY + 5);
+        }
+
+        doc.y = cardY + 28;
+        doc.fillColor(colors.secondary);
+
+        // ── Card Body (Field Rows) ────────────────────
+        const fieldLabelX = marginLeft + 12;
+        const fieldValueX = marginLeft + 130;
+
+        const fields = [
+          { label: 'Project ID', value: inspection.project_id ? `#${inspection.project_id}` : null },
+          { label: 'Date', value: inspection.date ? formatDate(inspection.date) : null },
+          { label: 'Type', value: inspection.type },
+          { label: 'Inspector', value: inspection.inspector },
+          { label: 'ISO Reference', value: inspection.iso_reference }
+        ];
+
+        fields.forEach(field => {
+          if (field.value) {
+            doc
+              .fontSize(10)
+              .font('Helvetica-Bold')
+              .fillColor(colors.darkGray)
+              .text(`${field.label}:`, fieldLabelX, doc.y)
+              .moveUp()
+              .font('Helvetica')
+              .fillColor(colors.secondary)
+              .text(field.value, fieldValueX, doc.y);
+            doc.moveDown(0.2);
+          }
+        });
+
+        doc.moveDown(0.3);
+
+        // Notes Section
+        if (inspection.notes) {
+          ensureSpace(80);
+          doc
+            .fontSize(10)
+            .font('Helvetica-Bold')
+            .fillColor(colors.darkGray)
+            .text('Notes:', fieldLabelX, doc.y);
+          doc
+            .font('Helvetica')
+            .fillColor(colors.secondary)
+            .text(inspection.notes, fieldLabelX, doc.y, {
+              align: 'justify',
+              width: contentWidth - 24
+            });
+          doc.moveDown(0.3);
+        }
+
+        // Separator line
+        doc.moveDown(0.5);
+        drawLine(doc.y, colors.mediumGray);
+        doc.moveDown(1);
+      });
+
+      // ══════════════════════════════════════════════════
+      // FOOTER — Page Numbers
+      // ══════════════════════════════════════════════════
+      const pageCount = doc.bufferedPageRange().count;
+      for (let i = 0; i < pageCount; i++) {
+        doc.switchToPage(i);
+
+        // Footer line
+        doc
+          .strokeColor(colors.mediumGray)
+          .lineWidth(0.5)
+          .moveTo(marginLeft, doc.page.height - 60)
+          .lineTo(pageWidth - marginRight, doc.page.height - 60)
+          .stroke();
+
+        // Page number
+        doc
+          .fontSize(9)
+          .fillColor(colors.darkGray)
+          .font('Helvetica')
+          .text(
+            `Page ${i + 1} of ${pageCount}`,
+            marginLeft,
+            doc.page.height - 50,
+            { align: 'center', width: contentWidth }
+          );
+
+        // Footer branding
+        doc
+          .fontSize(8)
+          .fillColor(colors.darkGray)
+          .text(
+            'Inspections Report — Construction Log System',
+            marginLeft,
+            doc.page.height - 38,
+            { align: 'center', width: contentWidth }
+          );
+      }
+
+      // ══════════════════════════════════════════════════
+      // FINALIZE
+      // ══════════════════════════════════════════════════
+      doc.end();
+
+      stream.on('finish', () => resolve(outputPath));
+      stream.on('error', (err) => reject(err));
+
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+
 }
 
 module.exports = PDFService;

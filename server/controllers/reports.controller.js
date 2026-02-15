@@ -2,6 +2,7 @@ const PDFService = require('../services/pdfService');
 const DailyLogs = require('../models/dailyLogs.model');
 const Equipment = require('../models/equipment.model');
 const Materials = require('../models/materials.model');
+const Inspections = require('../models/inspections.model');
 const path = require('path');
 const fs = require('fs');
 
@@ -178,6 +179,47 @@ class ReportsController {
       });
     }
   }
+
+  // Generate inspections report
+  async generateInspectionsReport(req, res) {
+    try {
+      const inspections = await Inspections.findAll();
+
+      if (inspections.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: 'No Inspections found'
+        });
+      }
+
+      const reportsDir = path.join(__dirname, '../reports');
+      if (!fs.existsSync(reportsDir)) {
+        fs.mkdirSync(reportsDir, { recursive: true });
+      }
+
+      const filename = `inspections-report-${Date.now()}.pdf`;
+      const outputPath = path.join(reportsDir, filename);
+
+      await PDFService.generateInspectionsReport(inspections, outputPath);
+
+      res.download(outputPath, filename, (err) => {
+        if (err) {
+          console.error('Download error:', err);
+        }
+        fs.unlinkSync(outputPath);
+      });
+    } catch (error) {
+      console.error('Report generation error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error generating report',
+        error: error.message
+      });
+    }
+  }
+
+
+
 }
 
 module.exports = new ReportsController();
