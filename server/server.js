@@ -19,6 +19,11 @@ const timeTrackingRoutes = require('./routes/timeTracking.routes');
 const reportsRoutes = require('./routes/reports.routes');
 const projectsRoutes = require('./routes/projects.routes');
 const issuessRoutes = require('./routes/issues.routes');
+const safetyIncidentsRoutes = require('./routes/safetyIncidents.routes');
+const permitsRoutes = require('./routes/permits.routes');
+const documentsRoutes = require('./routes/documents.routes');
+const workersRoutes = require('./routes/workers.routes');
+//const { default: SafetyIncidents } = require('../client/src/pages/SafetyIncidents');
 
 // Middleware
 app.use(cors());
@@ -53,6 +58,9 @@ app.get('/', (req, res) => {
       timeTracking: '/api/time-tracking',
       projects:'api/projects',
       issues:'api/issues',
+      safetyIncidents:'api/safety-incidents',
+      permits:'api/permits',
+      documents:'api/documents',
     }
   });
 });
@@ -76,8 +84,14 @@ app.use('/api/subcontractors', subcontractorsRoutes);
 app.use('/api/photos', photosRoutes);
 app.use('/api/time-tracking', timeTrackingRoutes);
 app.use('/api/reports', reportsRoutes); // ADD THIS
-app.use('/api/projects', require('./routes/projects.routes')); // project
-app.use('/api/issues', require('./routes/issues.routes'));//issues
+app.use('/api/projects', projectsRoutes); // project
+app.use('/api/issues', issuessRoutes);//
+app.use('/api/safety-incidents', safetyIncidentsRoutes);
+app.use('/api/permits', permitsRoutes);
+app.use('/api/documents', documentsRoutes);
+app.use('/api/workers', documentsRoutes);
+
+
 
 // 404 handler
 app.use((req, res) => {

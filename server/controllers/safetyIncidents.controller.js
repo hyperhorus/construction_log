@@ -1,4 +1,4 @@
-const SafetyIncident = require('../models/safety_incidents.model');
+const SafetyIncident = require('../models/safetyIncidents.model');
 
 class SafetyIncidentsController {
   // Get all incidents
