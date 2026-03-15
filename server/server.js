@@ -23,6 +23,7 @@ const safetyIncidentsRoutes = require('./routes/safetyIncidents.routes');
 const permitsRoutes = require('./routes/permits.routes');
 const documentsRoutes = require('./routes/documents.routes');
 const workersRoutes = require('./routes/workers.routes');
+const rolesRoutes = require('./routes/roles.routes');
 //const { default: SafetyIncidents } = require('../client/src/pages/SafetyIncidents');
 
 // Middleware
@@ -61,6 +62,9 @@ app.get('/', (req, res) => {
       safetyIncidents:'api/safety-incidents',
       permits:'api/permits',
       documents:'api/documents',
+      workers:'api/workers',
+      roles:'api/roles',
+
     }
   });
 });
@@ -89,15 +93,19 @@ app.use('/api/issues', issuessRoutes);//
 app.use('/api/safety-incidents', safetyIncidentsRoutes);
 app.use('/api/permits', permitsRoutes);
 app.use('/api/documents', documentsRoutes);
-app.use('/api/workers', documentsRoutes);
-
+app.use('/api/workers', workersRoutes);
+app.use('/api/roles', rolesRoutes);
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
 
 
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Route not found'
+    message: 'Route not foundddd'
   });
 });
 
@@ -117,12 +125,24 @@ app.listen(PORT, () => {
   console.log(`📍 http://localhost:${PORT}`);
   console.log(`📚 API Documentation: http://localhost:${PORT}/`);
   console.log('\n📋 Available Endpoints:');
-  console.log('   - Authentication: /api/auth');
-  console.log('   - Daily Logs:     /api/daily-logs');
-  console.log('   - Equipment:      /api/equipment');
-  console.log('   - Materials:      /api/materials');
-  console.log('   - Inspections:    /api/inspections');
-  console.log('   - Subcontractors: /api/subcontractors');
-  console.log('   - Photos:         /api/photos');
-  console.log('   - Time Tracking:  /api/time-tracking\n');
+  console.log('   - Authentication:   api/auth');
+  console.log('   - Daily Logs:       /api/daily-logs');
+  console.log('   - Equipment:        /api/equipment');
+  console.log('   - Materials:        /api/materials');
+  console.log('   - Inspections:      /api/inspections');
+  console.log('   - Subcontractors:   /api/subcontractors');
+  console.log('   - Photos:           /api/photos');
+  console.log('   - Time Tracking:    /api/time-tracking');
+  console.log('   - Reports:          /api/reports')
+  console.log('   - Projects:         /api/projects')
+  console.log('   - Issues:           /api/issues')
+  console.log('   - Safety Incidents: /api/safety-incidents')
+  console.log('   - Permits:          /api/permits')
+  console.log('   - Documents:        /api/documents')
+  console.log('   - Workers:          /api/workers')
+  console.log('   - Roles:            /api/roles\n')
+
+
+
+
 });
