@@ -125,8 +125,7 @@ class MaterialsController {
       });
     }
   }
-
-  // Update quantity
+  
   // Update quantity
 async updateQuantity(req, res) {
   try {

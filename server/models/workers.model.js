@@ -182,6 +182,66 @@ class Worker {
       throw error;
     }
   }
+
+// Update union member (for educatinal purposes)
+static async updateUnionMember(id, unionMember) {
+  try {   
+    // Simple SET query - no operation needed for a boolean tinyint
+    const query = 'UPDATE Workers SET union_member = ? WHERE worker_id = ?';
+    const params = [unionMember, parseInt(id)];
+
+    const [result] = await db.query(query, params);
+
+    if (result.affectedRows === 0) {
+      return null;
+    }
+     
+    return this.findById(parseInt(id));
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Update union member (for educatinal purposes)
+static async updateName(id, workerName) {
+  try {   
+    // Simple SET query - no operation needed for a boolean tinyint
+    const query = 'UPDATE Workers SET name = ? WHERE worker_id = ?';
+    const params = [workerName, parseInt(id)];
+
+    const [result] = await db.query(query, params);
+
+    if (result.affectedRows === 0) {
+      return null;
+    }
+     
+    return this.findById(parseInt(id));
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+// Update role
+static async updateRole(id, workerRole) {
+  try {   
+    // Simple SET query - no operation needed for a boolean tinyint
+    const query = 'UPDATE Workers SET role = ? WHERE worker_id = ?';
+    const params = [workerRole, parseInt(id)];
+
+    const [result] = await db.query(query, params);
+
+    if (result.affectedRows === 0) {
+      return null;
+    }
+     
+    return this.findById(parseInt(id));
+  } catch (error) {
+    throw error;
+  }
+}
+
+
 }
 
 module.exports = Worker;
